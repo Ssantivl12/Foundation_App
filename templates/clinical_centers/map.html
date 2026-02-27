@@ -1,0 +1,88 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Mapa de centros clínicos{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+>
+{% endblock %}
+
+{% block page_header %}
+<div class="page-header">
+    <div class="page-header__title">
+        <p class="page-header__eyebrow">Directorio</p>
+        <h1>Mapa de centros clínicos</h1>
+        <p class="page-header__desc">Encuentra los centros de salud activos cerca de ti, consulta sus servicios, horarios y datos de contacto.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="map-layout" id="map-layout">
+
+    {# ── Filters sidebar ── #}
+    <aside class="map-filters card" aria-label="Filtros del mapa">
+        <div class="map-filters__header">
+            <h2>Filtrar centros</h2>
+            <p>Selecciona una categoría para mostrar solo esos centros en el mapa o vuelve a "Todas" para verlos nuevamente.</p>
+        </div>
+        <div class="map-filters__control">
+            <label for="category-filter">Categoría</label>
+            <select id="category-filter" name="categoria">
+                <option value="" {% if not selected_category_id %}selected{% endif %}>Todas las categorías</option>
+                {% for category in categories_for_filter %}
+                    {% with category_id=category.id|stringformat:"s" %}
+                        <option value="{{ category.id }}"{% if selected_category_id == category_id %} selected{% endif %}>
+                            {{ category.name }}{% if category.active_centers %} ({{ category.active_centers }}){% endif %}
+                        </option>
+                    {% endwith %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="map-filters__actions">
+            <button type="button" class="btn btn--ghost" id="category-filter-reset">Limpiar filtro</button>
+        </div>
+        <p id="map-filter-result" class="map-filters__result" aria-live="polite"></p>
+    </aside>
+
+    {# ── Map panel ── #}
+    <div class="map-panel card">
+        <p id="public-map-status" class="map-status" aria-live="polite"></p>
+        <div
+            id="public-centers-map"
+            data-default-lat="{{ map_defaults.lat|default_if_none:'' }}"
+            data-default-lon="{{ map_defaults.lon|default_if_none:'' }}"
+            data-default-zoom="{{ map_defaults.zoom|default_if_none:'' }}"
+            data-initial-category="{{ selected_category_id }}"
+        ></div>
+        {{ centers_for_map|json_script:"centers-data" }}
+    </div>
+
+    {# ── Detail panel — populated by JS when "Ver detalles" is clicked ── #}
+    <aside class="center-detail card" id="center-detail" aria-label="Detalle del centro">
+        <div class="center-detail__header">
+            <div class="center-detail__title-group">
+                <span class="center-detail__category" id="detail-category"></span>
+                <h2 class="center-detail__name" id="detail-name"></h2>
+            </div>
+            <button type="button" class="center-detail__close" id="detail-close" aria-label="Cerrar panel">&#x2715;</button>
+        </div>
+        <div class="center-detail__body" id="detail-body"></div>
+    </aside>
+
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+    defer
+></script>
+<script src="{% static 'js/center_icons.js' %}" defer></script>
+<script src="{% static 'js/clinical_centers_public_map.js' %}" defer></script>
+{% endblock %}

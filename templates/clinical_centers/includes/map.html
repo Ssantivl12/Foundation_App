@@ -1,0 +1,35 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Mapa de centros clínicos{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+>
+{% endblock %}
+
+{% block page_title %}
+<h1>Mapa de centros clínicos</h1>
+{% endblock %}
+
+{% block page_actions %}{% endblock %}
+
+{% block content %}
+<section>
+    <p>Visualiza los centros registrados sobre el mapa. Haz clic en cada marcador para consultar los datos principales.</p>
+    <div id="public-centers-map" data-default-lat="{{ map_defaults.lat }}" data-default-lon="{{ map_defaults.lon }}" data-default-zoom="{{ map_defaults.zoom }}"></div>
+    {{ centers_for_map|json_script:"centers-data" }}
+</section>
+{% endblock %}
+
+{% block footer %}
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+    defer
+></script>
+<script src="{% static 'js/clinical_centers_public_map.js' %}" defer></script>
+{% endblock %}

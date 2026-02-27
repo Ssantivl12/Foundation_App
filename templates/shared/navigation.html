@@ -1,0 +1,27 @@
+{% load user_roles %}
+<ul class="site-nav__list">
+    <li class="site-nav__item">
+        <a class="site-nav__link" href="{% url 'home' %}">Inicio</a>
+    </li>
+    <li class="site-nav__item">
+        <a class="site-nav__link" href="{% url 'clinical_centers:center_map' %}">Mapa público</a>
+    </li>
+
+    {% if request.user.is_authenticated %}
+        <li class="site-nav__item">
+            <a class="site-nav__link" href="{% url 'users:profile' %}">Mi perfil</a>
+        </li>
+        {% if request.user|is_admin %}
+            <li class="site-nav__item">
+                <a class="site-nav__link" href="{% url 'admin-panel' %}">Panel de administrador</a>
+            </li>
+        {% endif %}
+        <li class="site-nav__item site-nav__item--auth">
+            <a class="site-nav__link site-nav__link--accent" href="{% url 'users:logout' %}">Cerrar sesión</a>
+        </li>
+    {% else %}
+        <li class="site-nav__item site-nav__item--auth">
+            <a class="site-nav__link site-nav__link--accent" href="{% url 'users:login' %}">Iniciar sesión</a>
+        </li>
+    {% endif %}
+</ul>

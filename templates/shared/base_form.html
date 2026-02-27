@@ -1,0 +1,17 @@
+{% extends "shared/base.html" %}
+
+{% block content %}
+    {% block form_before %}{% endblock %}
+    <form method="{% block form_method %}post{% endblock %}" class="{% block form_class %}form{% endblock %}"{% block form_attrs %}{% endblock %}>
+        {% block page_title %}{% endblock %}
+        {% csrf_token %}
+        {% block form_fields %}
+            {% include "shared/form_fields.html" with form=form %}
+        {% endblock %}
+        {% block form_footer %}
+            <button type="submit">{% block submit_label %}Guardar{% endblock %}</button>
+        {% endblock %}
+        {% block page_actions %}{% endblock %}
+    </form>
+    {% block form_after %}{% endblock %}
+{% endblock %}

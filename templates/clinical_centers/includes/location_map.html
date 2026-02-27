@@ -1,0 +1,19 @@
+{% with lat_value=form.latitude.value lon_value=form.longitude.value %}
+<div class="location-section">
+  <p class="location-section__hint">Haz clic en el mapa para fijar la ubicación, o arrastra el marcador. Los campos de latitud y longitud se actualizan automáticamente.</p>
+
+  <div
+      id="location-map"
+      class="map-block"
+      data-default-lat="{{ map_defaults.lat|default_if_none:'' }}"
+      data-default-lon="{{ map_defaults.lon|default_if_none:'' }}"
+      data-default-zoom="{{ map_defaults.zoom|default_if_none:'' }}"
+      data-nominatim-email="{{ map_defaults.nominatim_email|default_if_none:'' }}"
+      data-initial-lat="{{ lat_value }}"
+      data-initial-lon="{{ lon_value }}"
+      data-has-initial="{% if lat_value and lon_value %}1{% else %}0{% endif %}"
+  ></div>
+
+  <p id="location-map-status" class="map-status" aria-live="polite"></p>
+</div>
+{% endwith %}

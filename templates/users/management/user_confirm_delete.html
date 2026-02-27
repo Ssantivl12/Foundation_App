@@ -1,0 +1,18 @@
+{% extends "shared/base_confirm.html" %}
+
+{% block title %}Eliminar usuario{% endblock %}
+
+{% block page_title %}
+<h1>Eliminar usuario</h1>
+{% endblock %}
+
+{% block confirm_message %}
+    ¿Estás seguro de que deseas eliminar al usuario <strong>{{ object.get_full_name }}</strong> ({{ object.email }})?
+    Esta acción no se puede deshacer.
+{% endblock %}
+
+{% block confirm_submit_label %}Sí, eliminar{% endblock %}
+
+{% block confirm_cancel %}
+    <a href="{% url 'users:user_management_list' %}">Cancelar</a>
+{% endblock %}

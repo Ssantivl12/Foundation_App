@@ -1,0 +1,70 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Centros clínicos{% endblock %}
+
+{% block page_header %}
+<div class="page-header">
+  <div class="page-header__title">
+    <p class="page-header__eyebrow">Centros clínicos</p>
+    <h1>Gestionar centros</h1>
+  </div>
+  <a href="{% url 'clinical_centers:center_create' %}" class="lp-btn lp-btn--primary lp-btn--pill">
+    <i data-lucide="plus" style="width:16px;height:16px"></i>
+    Nuevo centro
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if centers %}
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Distrito</th>
+                <th>Teléfono</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for center in centers %}
+                <tr>
+                    <td><a href="{% url 'clinical_centers:center_detail' center.pk %}">{{ center.name }}</a></td>
+                    <td>{{ center.category }}</td>
+                    <td>{{ center.district|default:"-" }}</td>
+                    <td>{{ center.phone_number|default:center.cell_phone_number|default:"-" }}</td>
+                    <td>
+                        {% if center.is_active %}
+                            <span class="badge badge--green">Sí</span>
+                        {% else %}
+                            <span class="badge badge--red">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-actions">
+                        <a href="{% url 'clinical_centers:center_update' center.pk %}" class="table-action">Editar</a>
+                        <a href="{% url 'clinical_centers:center_delete' center.pk %}" class="table-action table-action--danger">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="empty-state">No hay centros registrados todavía.</p>
+{% endif %}
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

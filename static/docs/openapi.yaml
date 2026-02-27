@@ -1,0 +1,551 @@
+openapi: 3.0.3
+info:
+  title: Foundation App - Rutas HTML
+  description: |
+    Rutas actuales de la aplicación Django que renderizan templates HTML. Las vistas protegidas usan sesión de Django (`sessionid`)
+    después de autenticarse en `/usuarios/inicio-sesion/`. Las respuestas principales son HTML y las operaciones de formularios
+    redirigen al completar la acción.
+  version: 1.0.0
+servers:
+  - url: /
+    description: Servidor base
+tags:
+  - name: Publico
+    description: Rutas accesibles sin autenticación.
+  - name: Usuarios
+    description: Registro, inicio de sesión y perfil de usuarios.
+  - name: CentrosClinicos
+    description: CRUD de centros clínicos.
+  - name: Categorias
+    description: Gestión de categorías de centros.
+  - name: Admin
+    description: Paneles de administración.
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+      description: Sesión autenticada de Django establecida tras iniciar sesión.
+  parameters:
+    PageQuery:
+      name: page
+      in: query
+      description: Número de página para listas paginadas.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    CategoryFilter:
+      name: categoria
+      in: query
+      description: ID de categoría para filtrar el mapa público.
+      required: false
+      schema:
+        type: string
+  responses:
+    HtmlPage:
+      description: Página HTML renderizada.
+      content:
+        text/html:
+          schema:
+            type: string
+    Redirect:
+      description: Redirección después de completar la acción.
+      headers:
+        Location:
+          description: Ruta de destino de la redirección.
+          schema:
+            type: string
+            format: uri-reference
+  schemas:
+    LoginForm:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          format: email
+          description: Email del usuario.
+        password:
+          type: string
+          format: password
+        next:
+          type: string
+          format: uri-reference
+          description: Ruta a donde redirigir tras iniciar sesión.
+    RegisterForm:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+        - phone_number
+        - ci
+        - ci_issued_by
+        - password1
+        - password2
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone_number:
+          type: string
+        ci:
+          type: string
+          description: Carnet de identidad.
+        ci_issued_by:
+          type: string
+          description: Departamento que emitió el CI.
+        password1:
+          type: string
+          format: password
+        password2:
+          type: string
+          format: password
+          description: Confirmación de contraseña.
+    CategoryForm:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        is_active:
+          type: boolean
+    ClinicalCenterForm:
+      type: object
+      required:
+        - name
+        - latitude
+        - longitude
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        address_text:
+          type: string
+        district:
+          type: string
+        phone_number:
+          type: string
+        cell_phone_number:
+          type: string
+        email:
+          type: string
+          format: email
+        website:
+          type: string
+          format: uri
+        category:
+          type: integer
+          description: ID de la categoría.
+        services:
+          type: array
+          items:
+            type: string
+          description: Lista de servicios; se envía como texto separado por líneas/comas.
+        operating_hours:
+          type: string
+          description: Horarios en formato legible por el formulario (una línea por día).
+        hours_note:
+          type: string
+        is_active:
+          type: boolean
+paths:
+  /:
+    get:
+      tags: [Publico]
+      summary: Página de inicio
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /panel-administrador/:
+    get:
+      tags: [Admin]
+      summary: Panel administrativo
+      description: Vista de panel administrativo renderizada como HTML. Se espera protegerla con sesión autenticada.
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /admin/:
+    get:
+      tags: [Admin]
+      summary: Entrada a Django admin
+      description: Punto de acceso al panel de Django admin (incluye rutas internas de Django).
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /usuarios/registro/:
+    get:
+      tags: [Usuarios]
+      summary: Mostrar formulario de registro
+      security: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [Usuarios]
+      summary: Enviar registro de usuario
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterForm'
+      responses:
+        "302":
+          description: Redirige a `/usuarios/inicio-sesion/` tras registro exitoso.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /usuarios/inicio-sesion/
+        "200":
+          description: Formulario de registro con errores de validación.
+          content:
+            text/html:
+              schema:
+                type: string
+  /usuarios/inicio-sesion/:
+    get:
+      tags: [Usuarios]
+      summary: Mostrar formulario de inicio de sesión
+      security: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [Usuarios]
+      summary: Autenticar usuario
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+      responses:
+        "302":
+          description: Redirige a `next` o al home tras iniciar sesión correctamente.
+          headers:
+            Location:
+              schema:
+                type: string
+        "200":
+          description: Formulario con errores de credenciales.
+          content:
+            text/html:
+              schema:
+                type: string
+  /usuarios/cerrar-sesion/:
+    get:
+      tags: [Usuarios]
+      summary: Cerrar sesión y redirigir al inicio
+      description: Invalidación de la sesión actual; redirige al home.
+      security:
+        - cookieAuth: []
+      responses:
+        "302":
+          $ref: '#/components/responses/Redirect'
+  /usuarios/perfil/:
+    get:
+      tags: [Usuarios]
+      summary: Ver perfil del usuario autenticado
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /centros-clinicos/:
+    get:
+      tags: [CentrosClinicos]
+      summary: Listar centros clínicos
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageQuery'
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /centros-clinicos/mapa/:
+    get:
+      tags: [Publico]
+      summary: Mapa público de centros activos
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/CategoryFilter'
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /centros-clinicos/centros/nuevo/:
+    get:
+      tags: [CentrosClinicos]
+      summary: Mostrar formulario para nuevo centro
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [CentrosClinicos]
+      summary: Crear centro clínico
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClinicalCenterForm'
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/` tras crear el centro.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/
+        "200":
+          description: Formulario con errores de validación.
+          content:
+            text/html:
+              schema:
+                type: string
+  /centros-clinicos/centros/{pk}/:
+    get:
+      tags: [CentrosClinicos]
+      summary: Ver detalle de un centro clínico
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /centros-clinicos/centros/{pk}/editar/:
+    get:
+      tags: [CentrosClinicos]
+      summary: Mostrar formulario de edición de centro
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [CentrosClinicos]
+      summary: Actualizar centro clínico
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClinicalCenterForm'
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/` tras actualizar.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/
+        "200":
+          description: Formulario con errores.
+          content:
+            text/html:
+              schema:
+                type: string
+  /centros-clinicos/centros/{pk}/eliminar/:
+    get:
+      tags: [CentrosClinicos]
+      summary: Confirmación de eliminación de centro
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [CentrosClinicos]
+      summary: Eliminar centro clínico
+      description: Envío del formulario de confirmación de borrado.
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/` tras eliminar el centro.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/
+  /centros-clinicos/categorias/:
+    get:
+      tags: [Categorias]
+      summary: Listar categorías
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageQuery'
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+  /centros-clinicos/categorias/nueva/:
+    get:
+      tags: [Categorias]
+      summary: Mostrar formulario de nueva categoría
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [Categorias]
+      summary: Crear categoría
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoryForm'
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/categorias/` tras crear.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/categorias/
+        "200":
+          description: Formulario con errores.
+          content:
+            text/html:
+              schema:
+                type: string
+  /centros-clinicos/categorias/{pk}/editar/:
+    get:
+      tags: [Categorias]
+      summary: Mostrar formulario de edición de categoría
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [Categorias]
+      summary: Actualizar categoría
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoryForm'
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/categorias/` tras actualizar.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/categorias/
+        "200":
+          description: Formulario con errores.
+          content:
+            text/html:
+              schema:
+                type: string
+  /centros-clinicos/categorias/{pk}/eliminar/:
+    get:
+      tags: [Categorias]
+      summary: Confirmación de eliminación de categoría
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: '#/components/responses/HtmlPage'
+    post:
+      tags: [Categorias]
+      summary: Eliminar categoría
+      description: Envío del formulario de confirmación de borrado.
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pk
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "302":
+          description: Redirige a `/centros-clinicos/categorias/` tras eliminar.
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /centros-clinicos/categorias/

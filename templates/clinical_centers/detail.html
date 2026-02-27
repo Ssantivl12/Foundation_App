@@ -1,0 +1,73 @@
+{% extends "shared/base.html" %}
+
+{% block title %}{{ center.name }}{% endblock %}
+
+{% block page_title %}
+<h1>{{ center.name }}</h1>
+{% endblock %}
+
+{% block page_actions %}
+<p>
+    <a href="{% url 'clinical_centers:center_list' %}">Volver al listado</a> |
+    <a href="{% url 'clinical_centers:center_update' center.pk %}">Editar</a> |
+    <a href="{% url 'clinical_centers:center_delete' center.pk %}">Eliminar</a>
+</p>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Información general</h2>
+    <p><strong>Descripción:</strong> {{ center.description|default:"-" }}</p>
+    <p><strong>Categoría:</strong> {{ center.category|default:"-" }}</p>
+    <p><strong>Estado:</strong> {{ center.is_active|yesno:"Activo,Inactivo" }}</p>
+    <p><strong>Abierto ahora:</strong> {{ is_open_now|yesno:"Sí,No" }}</p>
+</section>
+
+<section>
+    <h2>Ubicación</h2>
+    <p><strong>Dirección:</strong> {{ center.address_text|default:"-" }}</p>
+    <p><strong>Distrito:</strong> {{ center.district|default:"-" }}</p>
+    <p><strong>Coordenadas:</strong> {{ center.latitude }}, {{ center.longitude }}</p>
+</section>
+
+<section>
+    <h2>Contacto</h2>
+    <p><strong>Teléfono:</strong> {{ center.phone_number|default:"-" }}</p>
+    <p><strong>Celular:</strong> {{ center.cell_phone_number|default:"-" }}</p>
+    <p><strong>Email:</strong> {{ center.email|default:"-" }}</p>
+    <p><strong>Sitio web:</strong>
+        {% if center.website %}
+            <a href="{{ center.website }}" target="_blank" rel="noopener">{{ center.website }}</a>
+        {% else %}
+            -
+        {% endif %}
+    </p>
+</section>
+
+<section>
+    <h2>Servicios</h2>
+    {% if services %}
+        <ul>
+            {% for service in services %}
+                <li>{{ service }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se registraron servicios.</p>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Horarios</h2>
+    {% if operating_hours %}
+        <ul>
+            {% for line in operating_hours %}
+                <li>{{ line }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se registraron horarios.</p>
+    {% endif %}
+    <p><strong>Nota:</strong> {{ center.hours_note|default:"-" }}</p>
+</section>
+{% endblock %}

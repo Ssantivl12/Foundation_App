@@ -1,0 +1,30 @@
+{% load static %}
+{% load tz %}
+<footer class="lp-footer">
+  <div class="lp-container lp-footer__inner">
+
+    <div class="lp-footer__brand">
+      <div class="lp-footer__brand-icon">
+        <i data-lucide="heart"
+           style="width:20px;height:20px;color:rgba(255,255,255,0.75)"></i>
+      </div>
+      <span class="lp-footer__brand-name">Programa Madre Educadora</span>
+    </div>
+
+    <p class="lp-footer__copy">
+      Desarrollado por <a href="https://horus-soft.com/" target="_blank" rel="noopener" class="lp-footer__dev">Horus</a>
+    </p>
+
+    <nav class="lp-footer__nav" aria-label="Footer">
+      <a href="{% url 'home' %}">Inicio</a>
+      <a href="{% url 'home' %}#nosotros">Nosotros</a>
+      <a href="{% url 'clinical_centers:center_map' %}">Mapa</a>
+      <a href="{% url 'home' %}#contacto">Contacto</a>
+      <a href="https://www.facebook.com/groups/956249811104477/" target="_blank" rel="noopener" class="lp-footer__social">
+        <i data-lucide="facebook" style="width:16px;height:16px"></i>
+        Facebook
+      </a>
+    </nav>
+
+  </div>
+</footer>

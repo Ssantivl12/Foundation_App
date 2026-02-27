@@ -1,0 +1,20 @@
+{% extends "shared/base_form.html" %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block page_title %}
+<h1>Iniciar sesión</h1>
+{% endblock %}
+
+{% block page_actions %}
+<p><a href="{% url 'users:register' %}">Crear cuenta</a></p>
+{% endblock %}
+
+{% block form_fields %}
+    {% include "shared/form_fields.html" with form=form %}
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+{% endblock %}
+
+{% block submit_label %}Ingresar{% endblock %}

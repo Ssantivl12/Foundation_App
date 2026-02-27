@@ -1,0 +1,56 @@
+{% load user_roles %}
+<header class="lp-header">
+  <div class="lp-container lp-header__inner">
+
+    <!-- Brand -->
+    <a href="{% url 'home' %}" class="lp-brand">
+      <div class="lp-brand__icon">
+        <i data-lucide="heart" style="width:20px;height:20px;color:#fff;stroke-width:2.5"></i>
+      </div>
+      <span class="lp-brand__name">Programa Madre Educadora</span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="lp-nav" aria-label="Navegación principal">
+
+      <!-- Fixed links — always visible on every page -->
+      <a href="{% url 'home' %}"                        class="lp-nav__link">Inicio</a>
+      <a href="{% url 'clinical_centers:center_map' %}" class="lp-nav__link">Mapa público</a>
+
+      {# Page-specific links — injected via context variables from the including template #}
+      {% if show_contacto %}
+        <a href="{% url 'home' %}#contacto" class="lp-nav__link">Contacto</a>
+      {% endif %}
+
+      <!-- Auth-gated links — only for authenticated users -->
+      {% if request.user.is_authenticated %}
+
+        <!-- Role-gated links — only for admins; hidden when already on that page -->
+        {% if request.user|is_admin and request.resolver_match.url_name != 'admin-panel' %}
+          <a href="{% url 'admin-panel' %}" class="lp-nav__link">Panel admin</a>
+        {% endif %}
+
+      {% endif %}
+
+    </nav>
+
+    <!-- Auth actions -->
+    <div class="app-header__auth">
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'users:profile' %}" class="lp-btn lp-btn--primary lp-btn--pill">
+          <i data-lucide="user" style="width:16px;height:16px"></i>
+          <span class="lp-header__cta-long">Mi perfil</span>
+          <span class="lp-header__cta-short">Perfil</span>
+        </a>
+        <a href="{% url 'users:logout' %}" class="app-header__logout">Salir</a>
+      {% else %}
+        <a href="{% url 'users:login' %}" class="lp-btn lp-btn--primary lp-btn--pill">
+          <i data-lucide="log-in" style="width:16px;height:16px"></i>
+          <span class="lp-header__cta-long">Iniciar sesión</span>
+          <span class="lp-header__cta-short">Entrar</span>
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</header>

@@ -1,0 +1,11 @@
+{% if messages %}
+<section class="flash-messages" aria-live="polite">
+    <ul class="flash-list">
+        {% for message in messages %}
+            <li class="flash-item{% if message.tags %} flash-item--{{ message.tags|default:''|slugify }}{% endif %}">
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

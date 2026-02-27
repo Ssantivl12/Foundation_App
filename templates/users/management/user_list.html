@@ -1,0 +1,68 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Gestión de usuarios{% endblock %}
+
+{% block page_header %}
+<div class="page-header">
+  <div class="page-header__title">
+    <p class="page-header__eyebrow">Usuarios</p>
+    <h1>Gestionar usuarios</h1>
+  </div>
+  <a href="{% url 'users:user_management_create' %}" class="lp-btn lp-btn--primary lp-btn--pill">
+    <i data-lucide="plus" style="width:16px;height:16px"></i>
+    Nuevo usuario
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if users %}
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.get_full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.get_role_display }}</td>
+                    <td>
+                        {% if user.is_active %}
+                            <span class="badge badge--green">Sí</span>
+                        {% else %}
+                            <span class="badge badge--red">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-actions">
+                        <a href="{% url 'users:user_management_update' user.pk %}" class="table-action">Editar</a>
+                        <a href="{% url 'users:user_management_delete' user.pk %}" class="table-action table-action--danger">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="empty-state">No hay usuarios registrados.</p>
+{% endif %}
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

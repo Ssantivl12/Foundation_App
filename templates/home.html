@@ -1,0 +1,310 @@
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Programa Madre Educadora - Comunidad boliviana de apoyo a familias con autismo.">
+  <title>Programa Madre Educadora - Bolivia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+{% include "shared/header.html" with show_contacto=True %}
+
+<main>
+
+  <!-- ═══════════════════════ HERO ═══════════════════════ -->
+  <section id="inicio" class="lp-hero">
+    <div class="lp-hero__bg"></div>
+
+    <div class="lp-container lp-hero__inner">
+
+      <!-- Text column -->
+      <div class="lp-hero__text">
+        <div class="lp-badge">
+          <span>Fundación de Autismo en Bolivia</span>
+        </div>
+
+        <h1 class="lp-hero__title">
+          Un espacio de
+          <span class="lp-hero__highlight">
+            comprensión<span class="lp-hero__underline"></span>
+          </span>
+          y apoyo mutuo
+        </h1>
+
+        <p class="lp-hero__lead">
+          Brindamos información, recursos y apoyo a familias sobre el Trastorno del Espectro Autista (TEA).
+          Juntos creamos una sociedad más inclusiva, empática y educada.
+        </p>
+
+        <div class="lp-hero__actions">
+          <a href="#contacto" class="lp-btn lp-btn--primary lp-btn--lg lp-btn--pill">
+            Habla con nosotros
+            <i data-lucide="chevron-right" style="width:20px;height:20px"></i>
+          </a>
+          <a href="#nosotros" class="lp-btn lp-btn--outline lp-btn--lg lp-btn--pill">
+            Conoce nuestras acciones
+          </a>
+        </div>
+      </div>
+
+      <!-- Media column -->
+      <div class="lp-hero__media">
+        <div class="lp-hero__card">
+          <div class="lp-hero__img-wrapper">
+            {% if hero_image %}
+              <img src="{% static hero_image %}" alt="Programa Madre Educadora Comunidad"
+                   class="lp-hero__img">
+            {% else %}
+              <div class="lp-hero__img-placeholder">
+                <i data-lucide="heart"
+                   style="width:80px;height:80px;color:var(--clr-primary);opacity:0.25"></i>
+              </div>
+            {% endif %}
+            <div class="lp-hero__overlay">
+              <div class="lp-hero__caption">
+                <p class="lp-hero__caption-title">Familia Programa Madre Educadora</p>
+                <p class="lp-hero__caption-sub">Conectando experiencias, compartiendo amor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-hero__blob lp-hero__blob--top"></div>
+        <div class="lp-hero__blob lp-hero__blob--bottom"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FEATURES / ABOUT ═══════════════════════ -->
+  <section id="nosotros" class="lp-features">
+    <div class="lp-container">
+
+      <div class="lp-section-header">
+        <h2 class="lp-section-title">Nuestro Propósito</h2>
+        <p class="lp-section-desc">
+          Este grupo quiere ser un espacio de comunicación con la finalidad de dar a conocer información
+          acerca del autismo y brindar apoyo constante a las familias en Bolivia.
+        </p>
+      </div>
+
+      <div class="lp-cards">
+
+        <div class="lp-card">
+          <div class="lp-card__icon lp-card__icon--primary lp-card__icon--rotate">
+            <i data-lucide="users" style="width:32px;height:32px"></i>
+          </div>
+          <h3 class="lp-card__title">Comunidad Inclusiva</h3>
+          <p class="lp-card__desc">
+            Conectamos a familias, educadores y profesionales para compartir experiencias
+            y construir una red de apoyo sólida.
+          </p>
+        </div>
+
+        <div class="lp-card">
+          <div class="lp-card__icon lp-card__icon--accent lp-card__icon--rotate-neg">
+            <i data-lucide="info"
+               style="width:32px;height:32px;color:hsl(45,93%,42%)"></i>
+          </div>
+          <h3 class="lp-card__title">Información Confiable</h3>
+          <p class="lp-card__desc">
+            Difundimos recursos educativos y material actualizado sobre el Trastorno del
+            Espectro Autista para concientizar.
+          </p>
+        </div>
+
+        <div class="lp-card">
+          <div class="lp-card__icon lp-card__icon--primary lp-card__icon--rotate">
+            <i data-lucide="heart" style="width:32px;height:32px"></i>
+          </div>
+          <h3 class="lp-card__title">Apoyo Emocional</h3>
+          <p class="lp-card__desc">
+            Acompañamos a madres y familias en su proceso, brindando un espacio seguro
+            de comprensión y empatía.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ MAP SECTION ═══════════════════════ -->
+  <section id="mapa" class="lp-map-section">
+    <div class="lp-container">
+      <div class="lp-map-section__grid">
+
+        <!-- Visual (mock map) -->
+        <div class="lp-map-section__visual">
+          <div class="lp-map-preview">
+            <div class="lp-map-preview__body">
+              <div class="lp-map-preview__center">
+                <div class="lp-map-preview__icon">
+                  <i data-lucide="map-pin"
+                     style="width:40px;height:40px;color:var(--clr-primary)"></i>
+                </div>
+                <p class="lp-map-preview__title">Mapa de Centros Especializados</p>
+                <p class="lp-map-preview__desc">
+                  Visualiza clínicas, centros de ayuda y prevención de autismo en tu ciudad.
+                </p>
+                <a href="{% url 'clinical_centers:center_map' %}"
+                   class="lp-btn lp-btn--outline-primary lp-btn--pill lp-btn--sm">
+                  <i data-lucide="search" style="width:14px;height:14px"></i>
+                  Ver mapa interactivo
+                </a>
+              </div>
+            </div>
+            <!-- Decorative search bar overlay -->
+            <div class="lp-map-preview__searchbar">
+              <i data-lucide="search"
+                 style="width:16px;height:16px;color:var(--clr-muted-fg)"></i>
+              <div class="lp-map-preview__search-pill"></div>
+            </div>
+            <!-- Decorative zoom controls -->
+            <div class="lp-map-preview__controls">
+              <div class="lp-map-preview__control-line"></div>
+              <div class="lp-map-preview__control-line"></div>
+            </div>
+          </div>
+
+          <!-- Floating badge -->
+          <div class="lp-map-badge">
+            <div class="lp-map-badge__icon">
+              <i data-lucide="map-pin"
+                 style="width:20px;height:20px;color:#16a34a"></i>
+            </div>
+            <div>
+              <p class="lp-map-badge__label">Centro Cercano</p>
+              <p class="lp-map-badge__name">Clínica de Apoyo TEA</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="lp-map-section__content">
+          <div class="lp-pill-tag">
+            <span>Red de Ayuda y Prevención</span>
+          </div>
+
+          <h2 class="lp-map-section__title">
+            Encuentra apoyo cerca de ti con nuestro mapa interactivo
+          </h2>
+
+          <p class="lp-map-section__desc">
+            Contamos con un apartado especializado donde podrás localizar geográficamente centros
+            clínicos, instituciones de ayuda y espacios de prevención del autismo en la ciudad.
+          </p>
+
+          <ul class="lp-check-list">
+            <li>
+              <div class="lp-check-list__icon">
+                <i data-lucide="chevron-right" style="width:16px;height:16px"></i>
+              </div>
+              Ubicación exacta de clínicas especializadas
+            </li>
+            <li>
+              <div class="lp-check-list__icon">
+                <i data-lucide="chevron-right" style="width:16px;height:16px"></i>
+              </div>
+              Centros de diagnóstico y prevención temprana
+            </li>
+            <li>
+              <div class="lp-check-list__icon">
+                <i data-lucide="chevron-right" style="width:16px;height:16px"></i>
+              </div>
+              Instituciones de apoyo gratuito y gubernamental
+            </li>
+            <li>
+              <div class="lp-check-list__icon">
+                <i data-lucide="chevron-right" style="width:16px;height:16px"></i>
+              </div>
+              Rutas y horarios de atención actualizados
+            </li>
+          </ul>
+
+          <div class="lp-map-section__cta">
+            <a href="{% url 'clinical_centers:center_map' %}"
+               class="lp-btn lp-btn--primary lp-btn--lg lp-btn--pill">
+              Explorar el Mapa
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+  <section id="contacto" class="lp-contact">
+    <div class="lp-contact__dots"></div>
+    <div class="lp-contact__blob"></div>
+
+    <div class="lp-contact__inner">
+      <div class="lp-contact__icon">
+        <i data-lucide="phone"
+           style="width:32px;height:32px;color:hsl(45,93%,67%)"></i>
+      </div>
+
+      <h2 class="lp-contact__title">
+        ¿Necesitas orientación o quieres formar parte?
+      </h2>
+
+      <p class="lp-contact__desc">
+        Si buscas orientación, quieres sumarte como voluntario o deseas coordinar actividades
+        en tu ciudad, estamos listos para escucharte.
+      </p>
+
+      <div class="lp-phones">
+        <a href="tel:+59176716506" class="lp-phone-card">
+          <div class="lp-phone-card__icon">
+            <i data-lucide="phone" style="width:28px;height:28px"></i>
+          </div>
+          <div class="lp-phone-card__info">
+            <p class="lp-phone-card__label">Marcelo Ergueta</p>
+            <p class="lp-phone-card__number">(591) 76716506</p>
+          </div>
+        </a>
+
+        <a href="tel:+59167118337" class="lp-phone-card">
+          <div class="lp-phone-card__icon">
+            <i data-lucide="phone" style="width:28px;height:28px"></i>
+          </div>
+          <div class="lp-phone-card__info">
+            <p class="lp-phone-card__label">Línea de Apoyo</p>
+            <p class="lp-phone-card__number">(591) 67118337</p>
+          </div>
+        </a>
+      </div>
+
+      <a href="https://www.facebook.com/groups/956249811104477/" target="_blank" rel="noopener" class="lp-phone-card lp-phone-card--fb">
+        <div class="lp-phone-card__icon">
+          <i data-lucide="facebook" style="width:28px;height:28px"></i>
+        </div>
+        <div class="lp-phone-card__info">
+          <p class="lp-phone-card__label">Grupo de Facebook</p>
+          <p class="lp-phone-card__number">Únete a la comunidad</p>
+        </div>
+      </a>
+
+      <p style="color:rgba(255,255,255,0.70);font-size:0.9375rem;max-width:40rem;margin-top:1rem;">
+        También puedes acercarte a nuestros encuentros semanales y compartir tus experiencias
+        con otras madres, padres y cuidadores.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+{% include "shared/footer.html" %}
+
+<!-- Lucide icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
+
+</body>
+</html>

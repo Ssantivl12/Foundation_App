@@ -1,0 +1,15 @@
+{% extends "shared/base_confirm.html" %}
+
+{% block title %}Eliminar categoría{% endblock %}
+
+{% block page_title %}
+<h1>Eliminar categoría</h1>
+{% endblock %}
+
+{% block confirm_message %}¿Estás seguro de que deseas eliminar la categoría <strong>{{ object }}</strong>?{% endblock %}
+
+{% block confirm_submit_label %}Sí, eliminar{% endblock %}
+
+{% block confirm_cancel %}
+    <a href="{% url 'clinical_centers:category_list' %}">Cancelar</a>
+{% endblock %}

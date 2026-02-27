@@ -1,0 +1,62 @@
+{% extends "shared/base_form.html" %}
+
+{% block title %}{% if form.instance.pk %}Editar usuario{% else %}Nuevo usuario{% endif %}{% endblock %}
+
+{% block form_class %}form form--wide{% endblock %}
+
+{% block page_title %}
+<h1>{% if form.instance.pk %}Editar: {{ form.instance.get_full_name }}{% else %}Nuevo usuario{% endif %}</h1>
+{% endblock %}
+
+{% block page_actions %}{% endblock %}
+
+{% block form_fields %}
+{% if form.non_field_errors %}
+<ul class="form-errors">
+    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<div class="form-section">
+    <p class="form-section__label">Identidad</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.first_name %}
+        {% include "shared/form_field.html" with field=form.last_name %}
+    </div>
+    {% include "shared/form_field.html" with field=form.email %}
+</div>
+
+<div class="form-section">
+    <p class="form-section__label">Datos personales</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.phone_number %}
+        {% include "shared/form_field.html" with field=form.ci %}
+    </div>
+    {% include "shared/form_field.html" with field=form.ci_issued_by %}
+</div>
+
+<div class="form-section">
+    <p class="form-section__label">Acceso y rol</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.role %}
+        {% include "shared/form_field.html" with field=form.is_active %}
+    </div>
+</div>
+
+{% if not form.instance.pk %}
+<div class="form-section">
+    <p class="form-section__label">Contraseña</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.password1 %}
+        {% include "shared/form_field.html" with field=form.password2 %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block form_footer %}
+<div class="form-actions">
+    <button type="submit">{% if form.instance.pk %}Guardar cambios{% else %}Crear usuario{% endif %}</button>
+    <a href="{% url 'users:user_management_list' %}" class="form-actions__cancel">Cancelar</a>
+</div>
+{% endblock %}

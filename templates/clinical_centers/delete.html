@@ -1,0 +1,15 @@
+{% extends "shared/base_confirm.html" %}
+
+{% block title %}Eliminar centro clínico{% endblock %}
+
+{% block page_title %}
+<h1>Eliminar centro clínico</h1>
+{% endblock %}
+
+{% block confirm_message %}¿Estás seguro de que deseas eliminar el centro <strong>{{ object }}</strong>?{% endblock %}
+
+{% block confirm_submit_label %}Sí, eliminar{% endblock %}
+
+{% block confirm_cancel %}
+    <a href="{% url 'clinical_centers:center_detail' object.pk %}">Cancelar</a>
+{% endblock %}

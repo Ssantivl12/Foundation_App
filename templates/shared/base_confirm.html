@@ -1,0 +1,15 @@
+{% extends "shared/base.html" %}
+
+{% block content %}
+    <div class="card">
+        {% block confirm_intro %}{% endblock %}
+        <p>{% block confirm_message %}¿Quieres continuar con esta acción?{% endblock %}</p>
+        <form class="form form--confirm" method="{% block form_method %}post{% endblock %}"{% block form_attrs %}{% endblock %}>
+            {% csrf_token %}
+            {% block confirm_actions %}
+                <button type="submit">{% block confirm_submit_label %}Confirmar{% endblock %}</button>
+                {% block confirm_cancel %}{% endblock %}
+            {% endblock %}
+        </form>
+    </div>
+{% endblock %}

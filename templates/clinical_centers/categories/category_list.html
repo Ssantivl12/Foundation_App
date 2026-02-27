@@ -1,0 +1,66 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Categorías de centros{% endblock %}
+
+{% block page_header %}
+<div class="page-header">
+  <div class="page-header__title">
+    <p class="page-header__eyebrow">Categorías</p>
+    <h1>Gestionar categorías</h1>
+  </div>
+  <a href="{% url 'clinical_centers:category_create' %}" class="lp-btn lp-btn--primary lp-btn--pill">
+    <i data-lucide="plus" style="width:16px;height:16px"></i>
+    Nueva categoría
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if categories %}
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Activa</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.description|default:"-" }}</td>
+                    <td>
+                        {% if category.is_active %}
+                            <span class="badge badge--green">Sí</span>
+                        {% else %}
+                            <span class="badge badge--red">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-actions">
+                        <a href="{% url 'clinical_centers:category_update' category.pk %}" class="table-action">Editar</a>
+                        <a href="{% url 'clinical_centers:category_delete' category.pk %}" class="table-action table-action--danger">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="empty-state">No hay categorías registradas.</p>
+{% endif %}
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

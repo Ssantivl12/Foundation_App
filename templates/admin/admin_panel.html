@@ -1,0 +1,76 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Panel administrativo{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-panel">
+
+  <header class="admin-panel__header">
+    <p class="admin-panel__eyebrow">Administración</p>
+    <h1>Panel administrativo</h1>
+    <p>Gestiona los recursos principales del sistema.</p>
+  </header>
+
+  <div class="admin-panel__grid">
+
+    <article class="admin-card">
+      <div class="admin-card__icon admin-card__icon--blue">
+        <i data-lucide="building-2" style="width:22px;height:22px"></i>
+      </div>
+      <div class="admin-card__body">
+        <p class="admin-card__eyebrow">Centros clínicos</p>
+        <h2 class="admin-card__title">Gestionar centros</h2>
+        <p class="admin-card__text">Consulta el listado completo de centros, crea nuevos registros o actualiza los existentes.</p>
+      </div>
+      <div class="admin-card__footer">
+        <a class="admin-card__btn" href="{% url 'clinical_centers:center_list' %}">
+          <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
+          Ir al listado
+        </a>
+      </div>
+    </article>
+
+    <article class="admin-card">
+      <div class="admin-card__icon admin-card__icon--green">
+        <i data-lucide="tags" style="width:22px;height:22px"></i>
+      </div>
+      <div class="admin-card__body">
+        <p class="admin-card__eyebrow">Categorías</p>
+        <h2 class="admin-card__title">Gestionar categorías</h2>
+        <p class="admin-card__text">Define o ajusta las categorías que organizan los centros clínicos disponibles.</p>
+      </div>
+      <div class="admin-card__footer">
+        <a class="admin-card__btn" href="{% url 'clinical_centers:category_list' %}">
+          <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
+          Ir a categorías
+        </a>
+      </div>
+    </article>
+
+    {% if request.user.is_superuser %}
+    <article class="admin-card">
+      <div class="admin-card__icon admin-card__icon--violet">
+        <i data-lucide="users" style="width:22px;height:22px"></i>
+      </div>
+      <div class="admin-card__body">
+        <p class="admin-card__eyebrow">Usuarios</p>
+        <h2 class="admin-card__title">Gestionar usuarios</h2>
+        <p class="admin-card__text">Crea, edita o elimina cuentas de usuario con rol administrador o usuario base.</p>
+      </div>
+      <div class="admin-card__footer">
+        <a class="admin-card__btn" href="{% url 'users:user_management_list' %}">
+          <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
+          Ir a usuarios
+        </a>
+      </div>
+    </article>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

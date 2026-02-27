@@ -1,0 +1,75 @@
+{% extends "shared/base_form.html" %}
+{% load static %}
+
+{% block title %}Editar centro clínico{% endblock %}
+
+{% block form_class %}form form--wide{% endblock %}
+
+{% block page_title %}<h1>Editar: {{ object }}</h1>{% endblock %}
+{% block page_actions %}
+<p><a href="{% url 'clinical_centers:center_detail' object.pk %}">Ver detalle</a></p>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+{% endblock %}
+
+{% block form_fields %}
+{% if form.non_field_errors %}
+<ul class="form-errors">
+    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<div class="form-section">
+    <p class="form-section__label">Información general</p>
+    {% include "shared/form_field.html" with field=form.name %}
+    {% include "shared/form_field.html" with field=form.description %}
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.category %}
+        {% include "shared/form_field.html" with field=form.is_active %}
+    </div>
+</div>
+
+<div class="form-section">
+    <p class="form-section__label">Contacto</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.phone_number %}
+        {% include "shared/form_field.html" with field=form.cell_phone_number %}
+    </div>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.email %}
+        {% include "shared/form_field.html" with field=form.website %}
+    </div>
+</div>
+
+<div class="form-section">
+    <p class="form-section__label">Ubicación</p>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.address_text %}
+        {% include "shared/form_field.html" with field=form.district %}
+    </div>
+    <div class="form-row">
+        {% include "shared/form_field.html" with field=form.latitude %}
+        {% include "shared/form_field.html" with field=form.longitude %}
+    </div>
+    {% include "clinical_centers/includes/location_map.html" with form=form map_defaults=map_defaults %}
+</div>
+
+<div class="form-section">
+    <p class="form-section__label">Servicios y horarios</p>
+    {% include "shared/form_field.html" with field=form.services %}
+    {% include "shared/form_field.html" with field=form.operating_hours %}
+    {% include "shared/form_field.html" with field=form.hours_note %}
+</div>
+{% endblock %}
+
+{% block form_after %}{% endblock %}
+
+{% block submit_label %}Actualizar{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<script src="{% static 'js/clinical_centers_location_form.js' %}" defer></script>
+<script src="{% static 'js/clinical_centers_form_widgets.js' %}" defer></script>
+{% endblock %}

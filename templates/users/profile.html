@@ -1,0 +1,44 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block page_title %}
+<div class="page-header">
+    <div class="page-header__title">
+        <p class="section-eyebrow">Tu cuenta</p>
+        <h1>Mi perfil</h1>
+        <p class="page-header__subtitle">Datos personales vinculados a tu perfil dentro del Programa Madre Educadora.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="profile-layout">
+    <div class="profile-card">
+        <div class="profile-card__header">
+            <p class="profile-card__eyebrow">Datos personales</p>
+            <h2 class="profile-card__title">{{ user.get_full_name|default:user.email }}</h2>
+            <p class="profile-card__intro">Verifica tu información de contacto para recibir novedades y coordinar actividades.</p>
+        </div>
+
+        <div class="profile-meta">
+            <div class="profile-meta__item">
+                <span class="profile-meta__label">Email</span>
+                <span class="profile-meta__value">{{ user.email }}</span>
+            </div>
+            <div class="profile-meta__item">
+                <span class="profile-meta__label">Teléfono</span>
+                <span class="profile-meta__value">{{ user.phone_number|default:"No registrado" }}</span>
+            </div>
+            <div class="profile-meta__item">
+                <span class="profile-meta__label">CI</span>
+                <span class="profile-meta__value">
+                    {{ user.ci|default:"No registrado" }}
+                    {% if user.ci_issued_by %}({{ user.ci_issued_by }}){% endif %}
+                </span>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
