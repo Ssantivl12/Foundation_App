@@ -10,31 +10,21 @@
       <span class="lp-brand__name">Programa Madre Educadora</span>
     </a>
 
-    <!-- Navigation -->
+    <!-- Navigation (desktop ≥1024px) -->
     <nav class="lp-nav" aria-label="Navegación principal">
-
-      <!-- Fixed links — always visible on every page -->
       <a href="{% url 'home' %}"                        class="lp-nav__link">Inicio</a>
       <a href="{% url 'clinical_centers:center_map' %}" class="lp-nav__link">Mapa público</a>
-
-      {# Page-specific links — injected via context variables from the including template #}
       {% if show_contacto %}
         <a href="{% url 'home' %}#contacto" class="lp-nav__link">Contacto</a>
       {% endif %}
-
-      <!-- Auth-gated links — only for authenticated users -->
       {% if request.user.is_authenticated %}
-
-        <!-- Role-gated links — only for admins; hidden when already on that page -->
         {% if request.user|is_admin and request.resolver_match.url_name != 'admin-panel' %}
           <a href="{% url 'admin-panel' %}" class="lp-nav__link">Panel admin</a>
         {% endif %}
-
       {% endif %}
-
     </nav>
 
-    <!-- Auth actions -->
+    <!-- Auth actions (always visible) -->
     <div class="app-header__auth">
       {% if request.user.is_authenticated %}
         <a href="{% url 'users:profile' %}" class="lp-btn lp-btn--primary lp-btn--pill">
@@ -52,5 +42,54 @@
       {% endif %}
     </div>
 
+    <!-- Hamburger toggle (visible below 1024px) -->
+    <button class="lp-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="lp-mobile-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile / tablet nav panel -->
+  <div class="lp-mobile-nav" id="lp-mobile-nav" aria-hidden="true">
+    <a href="{% url 'home' %}"                        class="lp-mobile-nav__link">Inicio</a>
+    <a href="{% url 'clinical_centers:center_map' %}" class="lp-mobile-nav__link">Mapa público</a>
+    {% if show_contacto %}
+      <a href="{% url 'home' %}#contacto" class="lp-mobile-nav__link">Contacto</a>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+      {% if request.user|is_admin and request.resolver_match.url_name != 'admin-panel' %}
+        <a href="{% url 'admin-panel' %}" class="lp-mobile-nav__link">Panel admin</a>
+      {% endif %}
+      <div class="lp-mobile-nav__divider"></div>
+      <a href="{% url 'users:profile' %}" class="lp-mobile-nav__link">Mi perfil</a>
+      <a href="{% url 'users:logout' %}" class="lp-mobile-nav__link lp-mobile-nav__link--muted">Salir</a>
+    {% else %}
+      <div class="lp-mobile-nav__divider"></div>
+      <a href="{% url 'users:login' %}" class="lp-mobile-nav__link">Iniciar sesión</a>
+    {% endif %}
   </div>
 </header>
+
+<script>
+  (function () {
+    var btn  = document.querySelector('.lp-nav-toggle');
+    var menu = document.getElementById('lp-mobile-nav');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      var open = menu.classList.toggle('lp-mobile-nav--open');
+      btn.classList.toggle('lp-nav-toggle--open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('lp-mobile-nav--open');
+        btn.classList.remove('lp-nav-toggle--open');
+        btn.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+      });
+    });
+  })();
+</script>
