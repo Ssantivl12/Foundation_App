@@ -51,6 +51,7 @@
    ============================================================ */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* prevent horizontal page scroll on narrow viewports */
 }
 
 body {
@@ -62,6 +63,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;  /* keep body from expanding beyond viewport */
 }
 
 /* Sticky footer: main always fills remaining space */
@@ -1152,6 +1154,7 @@ img {
   max-width: var(--container-max);
   margin-inline: auto;
   width: 100%;
+  min-width: 0; /* prevent flex item from expanding beyond viewport to fit table */
 }
 
 .site-footer {

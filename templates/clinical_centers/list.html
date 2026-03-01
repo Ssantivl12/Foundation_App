@@ -24,7 +24,6 @@
                 <th>Nombre</th>
                 <th>Categoría</th>
                 <th>Distrito</th>
-                <th>Teléfono</th>
                 <th>Activo</th>
                 <th>Acciones</th>
             </tr>
@@ -35,7 +34,6 @@
                     <td><a href="{% url 'clinical_centers:center_detail' center.pk %}">{{ center.name }}</a></td>
                     <td>{{ center.category }}</td>
                     <td>{{ center.district|default:"-" }}</td>
-                    <td>{{ center.phone_number|default:center.cell_phone_number|default:"-" }}</td>
                     <td>
                         {% if center.is_active %}
                             <span class="badge badge--green">Sí</span>
